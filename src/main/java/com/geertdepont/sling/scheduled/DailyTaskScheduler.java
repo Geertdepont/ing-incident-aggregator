@@ -16,7 +16,7 @@ public class DailyTaskScheduler {
     }
 
     // Schedule the task to run at 04:00 AM
-    @Scheduled(cron = "0 0 4 * * *")
+    @Scheduled(cron = "0 0 4 * * *", zone = "America/New_York")
     public void executeDailyTask() {
         aggregateIncidentService.aggregate();
     }
