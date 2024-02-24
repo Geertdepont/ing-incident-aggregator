@@ -36,8 +36,7 @@ public class AggregateService {
     /**
      * Go over all the incidents, aggregate the incidents based on date and assetName.
      * Using pagination to not load everything directly in to memory
-     * TODO when new incidents get uploaded the database, and if they contain the same date, old downtime will be replaced with new one
-     * TODO if that downtime already exists then
+     * TODO when new incidents get uploaded in the database, and if they contain the same date, old downtime will be replaced with new one
      */
     public void aggregate() {
         Slice<Incident> unprocessedIncidents = incidentRepository.findUnprocessedIncidents(CassandraPageRequest.first(cassandraPageSize));
@@ -63,7 +62,7 @@ public class AggregateService {
      * @param incidents List<Incident> incidents (Sorted on assetName, then date)
      * @param downtime DailyDowntime object (in which the data of that asset will be stored)
      *
-     * @return DailyDowntime object (the aggregated assets)
+     * @return the last DailyDowntime object (the aggregated assets)
      */
     private DailyDowntime aggregateIncidents(List<Incident> incidents, DailyDowntime downtime) {
         if (incidents.size() == 0){
@@ -73,7 +72,7 @@ public class AggregateService {
         Incident firstIncident = incidents.getFirst();
 
         if (downtime.getPrimaryKey() == null) {
-            downtime.setPrimaryKey(new DailyDowntime.CompositeKey(firstIncident.getPrimaryKey().getStartDate().toLocalDate(), firstIncident.getPrimaryKey().getAssetName()));
+            downtime.setPrimaryKey(new DailyDowntime.CompositeKey(firstIncident.getPrimaryKey().getAssetName(), firstIncident.getPrimaryKey().getStartDate().toLocalDate()));
         }
 
         for (Incident incident: incidents) {
@@ -88,7 +87,7 @@ public class AggregateService {
             ) {
                 dailyDowntimeRepository.save(downtime);
                 downtime = new DailyDowntime(
-                    new DailyDowntime.CompositeKey(incidentDate, incidentAsset),
+                    new DailyDowntime.CompositeKey(incidentAsset, incidentDate),
                     1,
                     downtimeSeconds,
                     incidentService.getRating(incident.getSeverity())

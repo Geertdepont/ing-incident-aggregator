@@ -4,8 +4,9 @@ CREATE TABLE dailydowntime (
     totalIncidents INT,
     totalDowntimeSeconds INT,
     rating INT,
-    PRIMARY KEY ((date), assetName)
-);
+    PRIMARY KEY ((assetName), date)
+) WITH CLUSTERING ORDER BY (date DESC)
+AND INDEX date_index (date);
 
 CREATE TABLE incident (
   startDate timestamp,

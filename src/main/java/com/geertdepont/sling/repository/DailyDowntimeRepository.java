@@ -6,9 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
-public interface DailyDowntimeRepository extends CrudRepository<DailyDowntime, UUID> {
+public interface DailyDowntimeRepository extends CrudRepository<DailyDowntime, DailyDowntime.CompositeKey> {
     @Query("SELECT * FROM dailydowntime WHERE date = ?0")
     List<DailyDowntime> findByDate(LocalDate date);
 }

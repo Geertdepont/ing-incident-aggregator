@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.List;
@@ -23,7 +22,7 @@ public class CSVExportService {
         this.dailyDowntimeRepository = dailyDowntimeRepository;
     }
 
-    public StreamingResponseBody streamCSV(LocalDate date) throws IOException {
+    public StreamingResponseBody streamCSV(LocalDate date) {
         if (date == null) {
             date = LocalDate.now();
         }
